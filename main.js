@@ -16,7 +16,7 @@
     var timg = tctx.createImageData(160, 160);
     for (var gi = 0; gi < timg.data.length; gi += 4) {
       timg.data[gi] = timg.data[gi + 1] = timg.data[gi + 2] = 17;
-      timg.data[gi + 3] = Math.random() * 75;
+      timg.data[gi + 3] = Math.random() * 55;
     }
     tctx.putImageData(timg, 0, 0);
     var grainEl = document.querySelector(".grain:not(.grain--soft)");
@@ -58,7 +58,10 @@
     container.appendChild(frag);
   }
 
-  fillRows(document.getElementById("heroRows"), "3g0th2002", 11, { rowClass: "hero__row", reps: 8, redRow: 6 });
+  // phones: enough rows to fill the whole hero, no empty gaps
+  var heroEl = document.querySelector(".hero");
+  var heroRowCount = lite && heroEl ? Math.max(11, Math.ceil(heroEl.clientHeight / 30) + 1) : 11;
+  fillRows(document.getElementById("heroRows"), "3g0th2002", heroRowCount, { rowClass: "hero__row", reps: 8, redRow: 6 });
   fillRows(document.getElementById("heroBlockRows"), "3g0th2002", 7, { rowClass: "hero__block-row", reps: 7, vary: false });
   fillRows(document.getElementById("footerRows"), "3g0th2002", 5, { rowClass: "footer__row", reps: lite ? 4 : 8, marquee: !reduced, redRow: 2 });
 
@@ -109,8 +112,8 @@
       baseCtx.scale(dpr, dpr);
 
       var g = baseCtx.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, "#8a8a8a");
-      g.addColorStop(1, "#6a6a6a");
+      g.addColorStop(0, "#9a9a9a");
+      g.addColorStop(1, "#7a7a7a");
       baseCtx.fillStyle = g;
       baseCtx.fillRect(0, 0, W, H);
 
@@ -128,7 +131,7 @@
         var x = b[1] * W, y = b[2] * H, rr = b[3] * W;
         var rg = baseCtx.createRadialGradient(x, y, 0, x, y, Math.max(10, rr));
         rg.addColorStop(0, b[0]);
-        rg.addColorStop(1, "rgba(106,106,106,0)");
+        rg.addColorStop(1, "rgba(122,122,122,0)");
         baseCtx.globalAlpha = 0.5;
         baseCtx.fillStyle = rg;
         baseCtx.fillRect(0, 0, W, H);
