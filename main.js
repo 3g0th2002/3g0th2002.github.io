@@ -231,6 +231,16 @@
       // chunky pixels: ~6px per noise cell, upscaled by css
       staticCanvas.width = Math.max(16, Math.floor(rect.width / 6));
       staticCanvas.height = Math.max(16, Math.floor(rect.height / 6));
+      // put the clear spot right behind the stack of circles
+      var stack = document.querySelector(".links__stack");
+      if (stack) {
+        var sr = stack.getBoundingClientRect();
+        var st = staticCanvas.style;
+        st.setProperty("--cx", (sr.left + sr.width / 2 - rect.left).toFixed(0) + "px");
+        st.setProperty("--cy", (sr.top + sr.height / 2 - rect.top).toFixed(0) + "px");
+        st.setProperty("--rx", ((sr.width / 2 + 70) / 0.7).toFixed(0) + "px");
+        st.setProperty("--ry", ((sr.height / 2 + 28) / 0.7).toFixed(0) + "px");
+      }
     }
 
     function paintStatic() {
@@ -254,6 +264,7 @@
     sizeStatic();
     paintStatic();
     window.addEventListener("resize", function () { sizeStatic(); paintStatic(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { sizeStatic(); paintStatic(); });
 
     if (!reduced) {
       if ("IntersectionObserver" in window) {
