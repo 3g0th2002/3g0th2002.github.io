@@ -63,25 +63,6 @@ a { color: inherit; text-decoration: none; }
   mix-blend-mode: soft-light;
 }
 
-/* ---------- custom cursor ---------- */
-
-.cursor {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 14px; height: 14px;
-  z-index: 100;
-  pointer-events: none;
-  background: var(--red);
-  box-shadow: 0 0 0 1.5px var(--ink);
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-@media (pointer: fine) {
-  .cursor { display: block; }
-  body, a, button { cursor: none; }
-}
-
 /* ---------- nav ---------- */
 
 .nav {

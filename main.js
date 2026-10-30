@@ -371,29 +371,6 @@
     revealEls.forEach(function (el) { el.classList.add("is-in"); });
   }
 
-  /* ---------- custom cursor ---------- */
-
-  var cursor = document.getElementById("cursor");
-  if (cursor && window.matchMedia("(pointer: fine)").matches && !reduced) {
-    var mx = -100, my = -100, cx = -100, cy = -100;
-    var hovering = false;
-    var cursorRaf = 0;
-    function moveCursor() {
-      cx += (mx - cx) * 0.28;
-      cy += (my - cy) * 0.28;
-      cursor.style.transform =
-        "translate(" + cx + "px," + cy + "px) translate(-50%,-50%) rotate(45deg) scale(" + (hovering ? 2.1 : 1) + ")";
-      // stop the loop once the cursor has caught up
-      cursorRaf = Math.abs(mx - cx) + Math.abs(my - cy) > 0.3 ? requestAnimationFrame(moveCursor) : 0;
-    }
-    window.addEventListener("mousemove", function (e) {
-      mx = e.clientX; my = e.clientY;
-      var t = e.target;
-      hovering = !!(t && t.closest && t.closest("a, button"));
-      if (!cursorRaf) cursorRaf = requestAnimationFrame(moveCursor);
-    });
-  }
-
   /* ---------- local clock ---------- */
 
   var clock = document.getElementById("clock");
