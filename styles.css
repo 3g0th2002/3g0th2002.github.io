@@ -46,18 +46,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- grain overlays ---------- */
 
-/* tv snow: fixed to the screen, frames swapped in place by main.js */
-.snow {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 90;
-  pointer-events: none;
-  image-rendering: pixelated;
-}
-
-/* soft cloudy layer: covers the whole page and scrolls with it */
+/* covers the whole page and scrolls with it */
 .grain {
   position: absolute;
   inset: 0;
@@ -869,6 +858,10 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- phones: lighter effects (html.lite set by main.js) ---------- */
 
+.lite .grain {
+  opacity: 1;
+  mix-blend-mode: normal;
+}
 
 .lite .grain--soft { display: none; }
 

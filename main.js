@@ -7,49 +7,20 @@
   var lite = window.matchMedia("(max-width: 960px), (pointer: coarse)").matches;
   if (lite) document.documentElement.classList.add("lite");
 
-  /* ---------- tv snow over the whole screen ---------- */
+  /* ---------- cheap grain for phones: pre-baked ink noise, no blend modes ---------- */
 
-  // a few pre-rendered frames cycled in place: flickers like a dead channel,
-  // never slides or shakes. Dark + light specks with alpha, no blend modes.
-  var snow = document.getElementById("snow");
-  if (snow && snow.getContext) {
-    var snowCtx = snow.getContext("2d");
-    var CELL = 2; // css px per speck
-    var snowFrames = [];
-    var snowFrame = 0;
-
-    function buildSnow() {
-      snow.width = Math.ceil(window.innerWidth / CELL);
-      snow.height = Math.ceil(window.innerHeight / CELL);
-      snowFrames = [];
-      for (var f = 0; f < 6; f++) {
-        var img = snowCtx.createImageData(snow.width, snow.height);
-        var px = new Uint32Array(img.data.buffer);
-        for (var p = 0; p < px.length; p++) {
-          var v = Math.random();
-          px[p] = v < 0.5
-            ? (((0.5 - v) * 140) << 24) | 0x111111          // dark speck
-            : ((((v - 0.5) * 90) & 255) << 24) | 0xf2f2f2;  // light speck
-        }
-        snowFrames.push(img);
-      }
-      snowCtx.putImageData(snowFrames[0], 0, 0);
+  if (lite) {
+    var tile = document.createElement("canvas");
+    tile.width = tile.height = 160;
+    var tctx = tile.getContext("2d");
+    var timg = tctx.createImageData(160, 160);
+    for (var gi = 0; gi < timg.data.length; gi += 4) {
+      timg.data[gi] = timg.data[gi + 1] = timg.data[gi + 2] = 17;
+      timg.data[gi + 3] = Math.random() * 55;
     }
-
-    buildSnow();
-    var snowResize;
-    window.addEventListener("resize", function () {
-      clearTimeout(snowResize);
-      snowResize = setTimeout(buildSnow, 200);
-    });
-
-    if (!reduced) {
-      setInterval(function () {
-        if (document.hidden) return;
-        snowFrame = (snowFrame + 1 + Math.floor(Math.random() * 4)) % snowFrames.length;
-        snowCtx.putImageData(snowFrames[snowFrame], 0, 0);
-      }, 80); // ~12fps
-    }
+    tctx.putImageData(timg, 0, 0);
+    var grainEl = document.querySelector(".grain:not(.grain--soft)");
+    if (grainEl) grainEl.style.backgroundImage = "url(" + tile.toDataURL() + ")";
   }
 
   /* ---------- repeated word rows ---------- */
