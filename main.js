@@ -40,9 +40,6 @@
         var track = document.createElement("span");
         track.className = "footer__track";
         track.textContent = text + text;
-        var dur = 80 + Math.random() * 50;
-        track.style.setProperty("--dur", dur.toFixed(1) + "s");
-        track.style.animationDelay = (-Math.random() * dur).toFixed(1) + "s";
         row.appendChild(track);
       } else {
         row.textContent = text;
@@ -63,7 +60,19 @@
 
   fillRows(document.getElementById("heroRows"), "3g0th2002", 11, { rowClass: "hero__row", reps: 8, redRow: 6 });
   fillRows(document.getElementById("heroBlockRows"), "3g0th2002", 7, { rowClass: "hero__block-row", reps: 7, vary: false });
-  fillRows(document.getElementById("footerRows"), "3g0th2002", 5, { rowClass: "footer__row", reps: 8, marquee: !reduced, redRow: 2 });
+  fillRows(document.getElementById("footerRows"), "3g0th2002", 5, { rowClass: "footer__row", reps: lite ? 4 : 8, marquee: !reduced, redRow: 2 });
+
+  // marquee speed in px/s, so phones (smaller text) don't crawl
+  function timeFooterRows() {
+    document.querySelectorAll(".footer__track").forEach(function (track) {
+      var dist = track.scrollWidth / 2;
+      var dur = dist / (32 + Math.random() * 16);
+      track.style.setProperty("--dur", dur.toFixed(1) + "s");
+      track.style.animationDelay = (-Math.random() * dur).toFixed(1) + "s";
+    });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(timeFooterRows);
+  else timeFooterRows();
 
   /* ---------- flicker on hero rows ---------- */
 
@@ -168,7 +177,7 @@
       var s = Math.max(40, W * 0.16);
       var sx = W * 0.16, sy = H * 0.46;
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(canvas,
+      ctx.drawImage(lite ? base : canvas,
         sx * dpr, sy * dpr, s * dpr, s * dpr,
         sx - s * 0.08, sy - s * 0.08, s * 1.16, s * 1.16
       );
@@ -251,6 +260,16 @@
       }
       setInterval(function () { if (staticVisible) paintStatic(); }, lite ? 180 : 110);
     }
+  }
+
+  /* ---------- pause css animations of blocks that are off screen ---------- */
+
+  if ("IntersectionObserver" in window) {
+    var offIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.target.classList.toggle("is-off", !e.isIntersecting); });
+    });
+    document.querySelectorAll(".hero, .ticker, .concept__links, .concept__tickets, .concept__tracks, .footer")
+      .forEach(function (el) { offIo.observe(el); });
   }
 
   /* ---------- audio player ---------- */
